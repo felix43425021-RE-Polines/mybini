@@ -2,6 +2,26 @@ import 'package:meta/meta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+/// **Model class**
+///
+/// Declared in abstract
+///
+/// Properties:
+/// - tableKeys: List<String> **abstract**
+/// - firestorePath: String **abstract**
+/// - realtimePath: String **abstract**
+/// - dataEmptiable: bool
+///
+/// Methods:
+/// - setData(List<dynamic> data)
+/// - getData()
+/// - firestoreRead()
+/// - firestoreWrite()
+/// - realtimeRead()
+/// - realtimeWrite()
+/// - realtimeUpdate(String key)
+/// - realtimeDelete(String key)
+///
 abstract class Model {
   /*  Protected properties section  */
   /// **Data that will be stored in Firestore collection**
