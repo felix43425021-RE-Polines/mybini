@@ -2,6 +2,26 @@ import 'package:meta/meta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+/// **Model class**
+///
+/// Declared in abstract
+///
+/// Properties:
+/// - tableKeys: List<String> **abstract**
+/// - firestorePath: String **abstract**
+/// - realtimePath: String **abstract**
+/// - dataEmptiable: bool
+///
+/// Methods:
+/// - setData(List<dynamic> data)
+/// - getData()
+/// - firestoreRead()
+/// - firestoreWrite()
+/// - realtimeRead()
+/// - realtimeWrite()
+/// - realtimeUpdate(String key)
+/// - realtimeDelete(String key)
+///
 abstract class Model {
   /*  Protected properties section  */
   /// **Data that will be stored in Firestore collection**
@@ -61,35 +81,46 @@ abstract class Model {
   }
 
   /// **Read data from Firestore collection**
-  Future<QuerySnapshot> firestoreRead() {
-    return firestore.collection(firestorePath).get();
+  Future firestoreRead(Function callback) async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection(firestorePath)
+        .get();
+    Map<String, dynamic> result = {};
+
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      result[doc.id] = doc.data() as Map<String, dynamic>;
+    }
+
+    callback(result);
   }
 
   /// **Write data to Firestore collection**
-  Future<DocumentReference> firestoreWrite() {
-    return firestore.collection(firestorePath).add(table);
+  Future<DocumentReference> firestoreWrite() async {
+    return firestore.collection(firestorePath).add(table).then((docRef) {
+      return docRef;
+    });
   }
 
   /// **Read data from Realtime Database**
-  Future<DatabaseEvent> realtimeRead() {
+  Future<DatabaseEvent> realtimeRead() async {
     DatabaseReference ref = realtime.ref(realtimePath);
     return ref.once();
   }
 
   /// **Write data to Realtime Database**
-  Future<void> realtimeWrite() {
+  Future<void> realtimeWrite() async {
     DatabaseReference ref = realtime.ref(realtimePath);
     return ref.push().set(table);
   }
 
   /// **Update data in Realtime Database**
-  Future<void> realtimeUpdate(String key) {
+  Future<void> realtimeUpdate(String key) async {
     DatabaseReference ref = realtime.ref("$realtimePath/$key");
     return ref.update(table);
   }
 
   /// **Delete data from Realtime Database**
-  Future<void> realtimeDelete(String key) {
+  Future<void> realtimeDelete(String key) async {
     DatabaseReference ref = realtime.ref("$realtimePath/$key");
     return ref.remove();
   }
