@@ -81,8 +81,17 @@ abstract class Model {
   }
 
   /// **Read data from Firestore collection**
-  Future<QuerySnapshot> firestoreRead() async {
-    return await firestore.collection(firestorePath).get();
+  void firestoreRead(Function callback) async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection(firestorePath)
+        .get();
+    Map<String, dynamic> result = {};
+
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      result[doc.id] = doc.data() as Map<String, dynamic>;
+    }
+
+    callback(result);
   }
 
   /// **Write data to Firestore collection**
