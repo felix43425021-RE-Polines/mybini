@@ -81,33 +81,31 @@ abstract class Model {
   }
 
   /// **Read data from Firestore collection**
-  Future<QuerySnapshot> firestoreRead() {
-    return firestore.collection(firestorePath).get();
+  Future<QuerySnapshot> firestoreRead() async {
+    return await firestore.collection(firestorePath).get();
   }
 
   /// **Write data to Firestore collection**
   Future<DocumentReference> firestoreWrite() async {
-    return firestore.collection(firestorePath).add(table).then((docRef) {
-      return docRef;
-    });
+    return await firestore.collection(firestorePath).add(table);
   }
 
   /// **Read data from Realtime Database**
   Future<DatabaseEvent> realtimeRead() async {
     DatabaseReference ref = realtime.ref(realtimePath);
-    return ref.once();
+    return await ref.once();
   }
 
   /// **Write data to Realtime Database**
   Future<void> realtimeWrite() async {
     DatabaseReference ref = realtime.ref(realtimePath);
-    return ref.push().set(table);
+    return await ref.push().set(table);
   }
 
   /// **Update data in Realtime Database**
   Future<void> realtimeUpdate(String key) async {
     DatabaseReference ref = realtime.ref("$realtimePath/$key");
-    return ref.update(table);
+    return await ref.update(table);
   }
 
   /// **Delete data from Realtime Database**
