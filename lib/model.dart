@@ -85,6 +85,17 @@ abstract class Model {
     return await firestore.collection(firestorePath).get();
   }
 
+  Future<QuerySnapshot> firestoreSubRead(
+    String docId,
+    String subCollection,
+  ) async {
+    return await firestore
+        .collection(firestorePath)
+        .doc(docId)
+        .collection(subCollection)
+        .get();
+  }
+
   /// **Write data to Firestore collection**
   Future<DocumentReference> firestoreWrite() async {
     return await firestore.collection(firestorePath).add(table);
