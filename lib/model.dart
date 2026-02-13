@@ -81,19 +81,13 @@ abstract class Model {
   }
 
   /// **Read data from Firestore collection**
-  Future<QuerySnapshot> firestoreRead() async {
+  Future<QuerySnapshot> firestoreRead({String? subCollectionPath}) async {
+    if (subCollectionPath != null && subCollectionPath != "") {
+      return await firestore
+          .collection("$firestorePath/$subCollectionPath")
+          .get();
+    }
     return await firestore.collection(firestorePath).get();
-  }
-
-  Future<QuerySnapshot> firestoreSubRead(
-    String docId,
-    String subCollection,
-  ) async {
-    return await firestore
-        .collection(firestorePath)
-        .doc(docId)
-        .collection(subCollection)
-        .get();
   }
 
   /// **Write data to Firestore collection**
