@@ -1,4 +1,4 @@
-![mybini-gif](mybini-gif)
+![mybini-gif](mybini-gif.gif)
 
 # MyBini
 
