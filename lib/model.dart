@@ -80,6 +80,10 @@ abstract class Model {
     return table;
   }
 
+  CollectionReference fs() {
+    return firestore.collection(firestorePath);
+  }
+
   /// **Read data from Firestore collection**
   Future<QuerySnapshot> firestoreRead({String? subCollectionPath}) async {
     if (subCollectionPath != null && subCollectionPath != "") {
@@ -93,6 +97,10 @@ abstract class Model {
   /// **Write data to Firestore collection**
   Future<DocumentReference> firestoreWrite() async {
     return await firestore.collection(firestorePath).add(table);
+  }
+
+  DatabaseReference rt() {
+    return realtime.ref(realtimePath);
   }
 
   /// **Read data from Realtime Database**
