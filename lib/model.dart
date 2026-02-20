@@ -56,17 +56,129 @@ abstract class Model {
   @protected
   FirebaseDatabase realtime = FirebaseDatabase.instance;
 
- 
   CollectionReference fs() {
     return firestore.collection(firestorePath);
   }
 
   /// **Read data from Firestore collection**
-  Future<QuerySnapshot> firestoreRead({String? subCollectionPath}) async {
+  Future<QuerySnapshot> firestoreRead({
+    String? subCollectionPath,
+    List<dynamic>? where,
+  }) async {
     if (subCollectionPath != null && subCollectionPath != "") {
+      if (where != null && where.length == 3) {
+        switch (where[1]) {
+          case "==":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], isEqualTo: where[2])
+                .get();
+          case "<":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], isLessThan: where[2])
+                .get();
+          case "<=":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], isLessThanOrEqualTo: where[2])
+                .get();
+          case ">":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], isGreaterThan: where[2])
+                .get();
+          case ">=":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], isGreaterThanOrEqualTo: where[2])
+                .get();
+          case "null":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], isNull: where[2])
+                .get();
+          case "contains":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], arrayContains: where[2])
+                .get();
+
+          case "containsAny":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], arrayContainsAny: where[2])
+                .get();
+          case "whereIn":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], whereIn: where[2])
+                .get();
+          case "whereNotIn":
+            return await firestore
+                .collection("$firestorePath/$subCollectionPath")
+                .where(where[0], whereNotIn: where[2])
+                .get();
+        }
+      }
       return await firestore
           .collection("$firestorePath/$subCollectionPath")
           .get();
+    }
+    if (where != null && where.length == 3) {
+      switch (where[1]) {
+        case "==":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], isEqualTo: where[2])
+              .get();
+        case "<":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], isLessThan: where[2])
+              .get();
+        case "<=":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], isLessThanOrEqualTo: where[2])
+              .get();
+        case ">":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], isGreaterThan: where[2])
+              .get();
+        case ">=":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], isGreaterThanOrEqualTo: where[2])
+              .get();
+        case "null":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], isNull: where[2])
+              .get();
+        case "contains":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], arrayContains: where[2])
+              .get();
+
+        case "containsAny":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], arrayContainsAny: where[2])
+              .get();
+        case "whereIn":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], whereIn: where[2])
+              .get();
+        case "whereNotIn":
+          return await firestore
+              .collection(firestorePath)
+              .where(where[0], whereNotIn: where[2])
+              .get();
+      }
     }
     return await firestore.collection(firestorePath).get();
   }
