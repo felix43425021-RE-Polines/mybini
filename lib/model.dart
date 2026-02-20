@@ -56,30 +56,7 @@ abstract class Model {
   @protected
   FirebaseDatabase realtime = FirebaseDatabase.instance;
 
-  /// **Set data inside table property**
-  void setData(List<dynamic> data) {
-    for (int i = 0; i < tableKeys.length; i++) {
-      if (i < data.length) {
-        table[tableKeys[i]] = data[i];
-      } else {
-        if (dataEmptiable) {
-          table[tableKeys[i]] = "";
-        } else {
-          throw FormatException("${tableKeys[i]} data cannot be emptied.");
-        }
-      }
-    }
-  }
-
-  /// **Get data inside table property**
-  ///
-  /// Main purpose is for debugging process
-  ///
-  /// Return [Map<String, dynamic>]
-  Map<String, dynamic> getData() {
-    return table;
-  }
-
+ 
   CollectionReference fs() {
     return firestore.collection(firestorePath);
   }
@@ -95,8 +72,8 @@ abstract class Model {
   }
 
   /// **Write data to Firestore collection**
-  Future<DocumentReference> firestoreWrite() async {
-    return await firestore.collection(firestorePath).add(table);
+  Future<void> firestoreWrite(Map<String, dynamic> data, doc) async {
+    firestore.collection(firestorePath).doc(doc).set(data);
   }
 
   DatabaseReference rt() {
